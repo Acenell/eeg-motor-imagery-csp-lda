@@ -41,8 +41,8 @@ from src.evaluate import csp_lda_fit, csp_lda_predict
 
 #Processes all edf files in subject folder
 #get_subject_data defaults may be customized
-x_train, y_train, _ = get_subject_data("subject_001_train/")
-x_valid, y_valid, label_map = get_subject_data("subject_001_test/")
+x_train, y_train = get_subject_data("subject_001_train/")
+x_valid, y_valid = get_subject_data("subject_001_test/")
 
 #Creates classifier object
 clf = csp_lda_classifier()
