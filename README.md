@@ -26,8 +26,8 @@ The pipeline includes:
 eeg-motor-imagery-csp-lda/
 ├── src/
 │   ├── data.py
-│   ├── models.py
-│   └── evaluate.py
+│   ├── evaluate.py
+│   └── model.py
 ├── notebooks/
 ├── data/
 ├── results/
