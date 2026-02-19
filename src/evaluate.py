@@ -1,4 +1,5 @@
 from sklearn.model_selection import StratifiedGroupKFold, StratifiedKFold, cross_val_score
+import numpy as np
 
 def evaluate(clf, data):
     """
@@ -35,6 +36,7 @@ def evaluate(clf, data):
     else:
         cv = StratifiedGroupKFold(n_splits=min(n_unique_groups, 5), shuffle=True)
         scores = cross_val_score(clf, x, y, groups=groups, cv=cv)
-        
-    print("Test accuracy:", corrects.mean())
-    return scores.mean(), scores
+    
+    mean = scores.mean()
+    print(f"Evaluation accuracy: {mean:.3f}")
+    return mean, scores

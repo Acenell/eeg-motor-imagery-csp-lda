@@ -5,7 +5,7 @@ mne.set_log_level("ERROR")
 
 Path.DEFAULT_PATH = Path('/home/aen/eegenv')
 def get_subject_data(
-    path,
+    files,
     classes,
     offset=0.5,
     duration=3.5,
@@ -17,8 +17,8 @@ def get_subject_data(
 
     Parameters
     ----------
-    path : str or Path
-        Directory containing EDF files for one subject.
+    files : str of path or Path or list of Path
+        Directory containing EDF files for one subject, or a list of EDF files.
     classes : tuple of str (length 2)
         Two event labels to use for binary classification Ex: (left, right).
     offset : float
@@ -42,18 +42,17 @@ def get_subject_data(
             epochs between runs
     """
     # Find all EDF runs for this subject
-    runs = sorted(Path(path).glob("*.edf"))
+    runs = sorted(Path(files).glob("*.edf")) if isinstance(files, (str, Path)) else files
     if len(runs) == 0:
-        raise FileNotFoundError(f"No EDF files found in {path}")
+        raise FileNotFoundError(f"No EDF files found in {files}")
 
     x_all = []  # List of epoch data arrays across runs
     y_all = []  # List of label arrays across runs
     groups = [] # Numeric run identifier for each epoch across runs
-    label_map = {0: classes[0], 1: classes[1]} # Maps numeric labels to class names
     
     # Load and process each run independently
     for run_id, run_path in enumerate(runs):
-        x, y = get_epochs(run_path, offset, duration, classes, fmin, fmax)
+        x, y = get_epochs(run_path, classes, offset, duration, fmin, fmax)
         x_all.append(x)
         y_all.append(y)
         groups.append(np.full(len(y), run_id))
@@ -116,7 +115,7 @@ def get_epochs(
 
         if not all(c in event_id for c in classes):
             raise ValueError(
-                f"classes must be event labels in EDF files. "
+                f"classes must be event annototation labels in EDF files. "
                 f"Available: {list(event_id.keys())}"
             )
 
