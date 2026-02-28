@@ -1,5 +1,5 @@
 ## Disclaimer
-The data used in the BCI_Literacy_Test notebook is an EEG PhysioNet dataset published in 2009 with 109 subjects.
+The data used in the testing notebooks is an EEG PhysioNet dataset published in 2009 with 109 subjects.
 The dataset is too big to put here. If You'd like to run the BCI_Literacy_Test notebook yourself, download it with
 the official source below and put it in this (EEG-MOTOR-IMAGERY-CSP-LDA/data) directory.
 

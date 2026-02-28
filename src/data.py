@@ -81,7 +81,7 @@ def get_epochs(
     Parameters
     ----------
     path : str or Path
-        Directory containing EDF files for one subject.
+        Path for a single EDF file
     classes : tuple of str (length 2)
         Two event labels to use for binary classification Ex: (left, right).
     offset : float
@@ -142,3 +142,57 @@ def get_epochs(
     y = np.array([classes[idx] for idx in y])
     
     return x, y
+
+
+def get_labeled_sample_intervals(
+    path,
+    classes,
+    offset=0.5,
+    duration=3.5,
+    fmin=8,
+    fmax=30
+):
+    """
+    Load a single EDF file and extract intervals for each class.
+
+    Parameters
+    ----------
+    path : str or Path
+        Path for a single EDF file
+    classes : tuple of str (length 2)
+        Two event labels to use for binary classification Ex: (left, right).
+
+    Returns
+    -------
+    intervals : dict
+        Dictionary mapping each class label to a list of (start, end) sample interval tuples.
+    """
+    raw = mne.io.read_raw_edf(path, preload=True)
+    
+    events, event_id = mne.events_from_annotations(raw)
+    freq = raw.info['sfreq']
+    event_id = {k: v for k, v in event_id.items() if k in classes}
+
+    if not all(c in event_id for c in classes):
+        raise ValueError(
+            f"classes must be event annototation labels in EDF files. "
+            f"Available: {list(event_id.keys())}"
+        )
+
+    if len(event_id) != 2:
+        raise ValueError(
+            f"Exactly two classes required for classification. "
+            f"Got {len(classes)}: {classes}"
+        )
+
+    id_to_label = {v: k for k, v in event_id.items()}
+
+    intervals = {c: [] for c in classes}
+    for event in events:
+        label = id_to_label.get(event[-1], None)
+        if label:
+            start = int(event[0] + offset * freq)
+            end = int(start + (duration * freq))
+            intervals[label].append((start, end))
+
+    return intervals
