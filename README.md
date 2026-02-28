@@ -29,11 +29,13 @@ eeg-motor-imagery-csp-lda/
 │   ├── evaluate.py
 │   └── model.py
 ├── notebooks/
-│   └── BCI_Literacy_Test.ipynb
+│   ├── BCI_Literacy_Test.ipynb
+│   └── Simulated_Online_Classification.ipynb
 ├── data/
 │   └── Credits_and_Data.txt
 ├── results/
-│   └── BCI_Literacy_Test_Results.txt
+│   ├── BCI_Literacy_Test_Results.txt
+│   └── Simulated_Online_Classification_Results.ipynb
 ├── README.md
 └── requirements.txt
 ```
