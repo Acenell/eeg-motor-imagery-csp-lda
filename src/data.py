@@ -3,7 +3,6 @@ import mne
 import numpy as np
 mne.set_log_level("ERROR")
 
-Path.DEFAULT_PATH = Path('/home/aen/eegenv')
 def get_subject_data(
     files,
     classes,
