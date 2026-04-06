@@ -3,8 +3,9 @@ import numpy as np
 
 def evaluate(clf, data):
     """
-    Evaluates performance of CSP+LDA pipeline with the given data
-    from get_subject_data()
+    Evaluates performance of a classifier. Within-run evaluation if
+    data contains one run/group. Cross-run evaluation if data contains 
+    multiple runsgroups.
     
     Parameters
     ----------
@@ -30,13 +31,14 @@ def evaluate(clf, data):
 
     x, y , groups = data["x"], data["y"], data["groups"]
     n_unique_groups = len(np.unique(groups))
+
+    # Within-run evaluation if train_data contains only one run/group.
     if n_unique_groups <= 1:
         cv = StratifiedKFold(n_splits=5, shuffle=True)
         scores = cross_val_score(clf, x, y, cv=cv)
-    else:
+    else: # Cross-run evaluation if train_data contains multiple runs/groups.
         cv = StratifiedGroupKFold(n_splits=min(n_unique_groups, 5), shuffle=True)
         scores = cross_val_score(clf, x, y, groups=groups, cv=cv)
     
     mean = scores.mean()
-    print(f"Evaluation accuracy: {mean:.3f}")
     return mean, scores
